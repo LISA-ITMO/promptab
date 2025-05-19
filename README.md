@@ -1,1 +1,2 @@
-# promptab
+# prompTab
+This repository contains a service for enhancing prompts for large language models (LLM). The service automatically analyzes user-provided prompts, identifies potential inaccuracies or weaknesses, and suggests improved versions to increase the quality and relevance of LLM responses. The solution can be used by developers, researchers, and companies to optimize interactions with language models and boost text generation efficiency.
