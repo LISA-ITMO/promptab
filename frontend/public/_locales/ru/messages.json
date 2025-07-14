@@ -1,0 +1,56 @@
+{
+	"extension_name": {
+		"message": "PrompTab - Оптимизатор AI промптов"
+	},
+	"extension_description": {
+		"message": "Интеллектуальное расширение для оптимизации промптов с использованием RAG и передовых техник"
+	},
+	"optimize_button": {
+		"message": "Оптимизировать"
+	},
+	"save_template": {
+		"message": "Сохранить как шаблон"
+	},
+	"create_variable": {
+		"message": "Создать переменную"
+	},
+	"send_to_chatgpt": {
+		"message": "Отправить в ChatGPT"
+	},
+	"send_to_perplexity": {
+		"message": "Отправить в Perplexity"
+	},
+	"optimization_in_progress": {
+		"message": "Оптимизация промпта..."
+	},
+	"optimization_complete": {
+		"message": "Промпт оптимизирован!"
+	},
+	"optimization_error": {
+		"message": "Ошибка при оптимизации промпта"
+	},
+	"login_required": {
+		"message": "Необходима авторизация"
+	},
+	"variable_name": {
+		"message": "Имя переменной"
+	},
+	"variable_description": {
+		"message": "Описание переменной"
+	},
+	"variable_default_value": {
+		"message": "Значение по умолчанию"
+	},
+	"history": {
+		"message": "История"
+	},
+	"templates": {
+		"message": "Шаблоны"
+	},
+	"variables": {
+		"message": "Переменные"
+	},
+	"settings": {
+		"message": "Настройки"
+	}
+}

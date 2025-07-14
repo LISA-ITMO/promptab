@@ -1,0 +1,172 @@
+name: Build and Deploy Documentation
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'backend/docs/**'
+      - 'backend/app/**'
+      - 'backend/requirements*.txt'
+      - '.github/workflows/docs.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'backend/docs/**'
+      - 'backend/app/**'
+      - 'backend/requirements*.txt'
+      - '.github/workflows/docs.yml'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Install dependencies
+      run: |
+        cd backend
+        pip install -r requirements.txt
+        pip install -r requirements-docs.txt
+        
+    - name: Build documentation
+      run: |
+        cd backend
+        chmod +x scripts/build_docs.sh
+        ./scripts/build_docs.sh
+        
+    - name: Upload documentation artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: documentation
+        path: backend/docs/_build/html/
+        
+    - name: Deploy to GitHub Pages
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./backend/docs/_build/html
+        force_orphan: true
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        commit_message: 'docs: update documentation [skip ci]'
+        
+  test-docs:
+    runs-on: ubuntu-latest
+    needs: build-docs
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download documentation artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: documentation
+        path: ./docs
+        
+    - name: Test documentation links
+      run: |
+        # Install link checker
+        pip install linkchecker
+        
+        # Check for broken links in documentation
+        linkchecker --check-extern --no-robots ./docs || true
+        
+    - name: Validate HTML
+      run: |
+        # Install html5validator
+        pip install html5validator
+        
+        # Validate HTML files
+        html5validator --root ./docs --ignore-re ".*" || true
+        
+  quality-check:
+    runs-on: ubuntu-latest
+    needs: build-docs
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download documentation artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: documentation
+        path: ./docs
+        
+    - name: Check documentation size
+      run: |
+        echo "Documentation size:"
+        du -sh ./docs
+        
+        echo "Number of HTML files:"
+        find ./docs -name "*.html" | wc -l
+        
+        echo "Largest files:"
+        find ./docs -type f -exec ls -lh {} \; | sort -k5 -hr | head -10
+        
+    - name: Check for common issues
+      run: |
+        echo "Checking for common documentation issues..."
+        
+        # Check for missing images
+        echo "Checking for missing images..."
+        find ./docs -name "*.html" -exec grep -l "img.*src" {} \; | xargs -I {} grep -o 'src="[^"]*"' {} | grep -v "data:" | while read line; do
+          src=$(echo $line | sed 's/src="//' | sed 's/"//')
+          if [[ ! -f "./docs/$src" ]]; then
+            echo "WARNING: Missing image: $src"
+          fi
+        done || true
+        
+        # Check for broken internal links
+        echo "Checking for broken internal links..."
+        find ./docs -name "*.html" -exec grep -l "href=" {} \; | xargs -I {} grep -o 'href="[^"]*"' {} | grep -v "http" | grep -v "mailto:" | while read line; do
+          href=$(echo $line | sed 's/href="//' | sed 's/"//')
+          if [[ ! -f "./docs/$href" ]] && [[ ! -f "./docs/$href.html" ]]; then
+            echo "WARNING: Potentially broken link: $href"
+          fi
+        done || true
+        
+    - name: Generate documentation report
+      run: |
+        echo "# Documentation Build Report" > docs_report.md
+        echo "" >> docs_report.md
+        echo "## Build Information" >> docs_report.md
+        echo "- Build Date: $(date)" >> docs_report.md
+        echo "- Repository: ${{ github.repository }}" >> docs_report.md
+        echo "- Branch: ${{ github.ref_name }}" >> docs_report.md
+        echo "- Commit: ${{ github.sha }}" >> docs_report.md
+        echo "" >> docs_report.md
+        echo "## Statistics" >> docs_report.md
+        echo "- Total size: $(du -sh ./docs | cut -f1)" >> docs_report.md
+        echo "- HTML files: $(find ./docs -name "*.html" | wc -l)" >> docs_report.md
+        echo "- CSS files: $(find ./docs -name "*.css" | wc -l)" >> docs_report.md
+        echo "- JS files: $(find ./docs -name "*.js" | wc -l)" >> docs_report.md
+        echo "" >> docs_report.md
+        echo "## Files Generated" >> docs_report.md
+        find ./docs -type f -name "*.html" | head -20 | while read file; do
+          echo "- $(basename "$file")" >> docs_report.md
+        done
+        
+    - name: Upload documentation report
+      uses: actions/upload-artifact@v3
+      with:
+        name: docs-report
+        path: docs_report.md 

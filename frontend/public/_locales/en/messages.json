@@ -1,0 +1,56 @@
+{
+	"extension_name": {
+		"message": "PrompTab - AI Prompt Optimizer"
+	},
+	"extension_description": {
+		"message": "Intelligent extension for prompt optimization using RAG and advanced techniques"
+	},
+	"optimize_button": {
+		"message": "Optimize"
+	},
+	"save_template": {
+		"message": "Save as Template"
+	},
+	"create_variable": {
+		"message": "Create Variable"
+	},
+	"send_to_chatgpt": {
+		"message": "Send to ChatGPT"
+	},
+	"send_to_perplexity": {
+		"message": "Send to Perplexity"
+	},
+	"optimization_in_progress": {
+		"message": "Optimizing prompt..."
+	},
+	"optimization_complete": {
+		"message": "Prompt optimized!"
+	},
+	"optimization_error": {
+		"message": "Error optimizing prompt"
+	},
+	"login_required": {
+		"message": "Login required"
+	},
+	"variable_name": {
+		"message": "Variable Name"
+	},
+	"variable_description": {
+		"message": "Variable Description"
+	},
+	"variable_default_value": {
+		"message": "Default Value"
+	},
+	"history": {
+		"message": "History"
+	},
+	"templates": {
+		"message": "Templates"
+	},
+	"variables": {
+		"message": "Variables"
+	},
+	"settings": {
+		"message": "Settings"
+	}
+}
