@@ -1,0 +1,81 @@
+{
+	"manifest_version": 3,
+	"name": "PrompTab - AI Prompt Optimizer",
+	"version": "1.0.0",
+	"description": "Intelligent extension for optimizing prompts using RAG and advanced techniques",
+	"author": "PrompTab Team",
+	"default_locale": "ru",
+	"permissions": [
+		"activeTab",
+		"storage",
+		"contextMenus",
+		"notifications"
+	],
+	"host_permissions": [
+		"https://chat.openai.com/*",
+		"https://www.perplexity.ai/*",
+		"http://89.169.186.91:8000/*"
+	],
+	"background": {
+		"service_worker": "background.js",
+		"type": "module"
+	},
+	"action": {
+		"default_popup": "popup.html",
+		"default_icon": {
+			"16": "icons/icon16.png",
+			"32": "icons/icon32.png",
+			"48": "icons/icon48.png",
+			"128": "icons/icon128.png"
+		},
+		"default_title": "PrompTab - Prompt Optimizer"
+	},
+	"content_scripts": [
+		{
+			"matches": [
+				"https://chat.openai.com/*",
+				"https://www.perplexity.ai/*"
+			],
+			"js": [
+				"contentScript.js"
+			],
+			"css": [
+				"contentScript.css"
+			],
+			"run_at": "document_end"
+		}
+	],
+	"options_page": "options.html",
+	"icons": {
+		"16": "icons/icon16.png",
+		"32": "icons/icon32.png",
+		"48": "icons/icon48.png",
+		"128": "icons/icon128.png"
+	},
+	"web_accessible_resources": [
+		{
+			"resources": [
+				"icons/*",
+				"fonts/*"
+			],
+			"matches": [
+				"<all_urls>"
+			]
+		}
+	],
+	"commands": {
+		"optimize-selection": {
+			"suggested_key": {
+				"default": "Ctrl+Shift+O",
+				"mac": "Command+Shift+O"
+			},
+			"description": "Optimize selected text"
+		},
+		"_execute_action": {
+			"suggested_key": {
+				"default": "Ctrl+Shift+P",
+				"mac": "Command+Shift+P"
+			}
+		}
+	}
+}

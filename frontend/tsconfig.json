@@ -1,0 +1,88 @@
+{
+	"compilerOptions": {
+		"target": "ES2020",
+		"lib": [
+			"ES2020",
+			"DOM",
+			"DOM.Iterable"
+		],
+		"jsx": "react-jsx",
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"types": [
+			"chrome",
+			"webextension-polyfill"
+		],
+		"allowJs": true,
+		"checkJs": false,
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		"outDir": "./dist",
+		"rootDir": "./src",
+		"strict": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedIndexedAccess": false,
+		"noImplicitOverride": true,
+		"noPropertyAccessFromIndexSignature": false,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"forceConsistentCasingInFileNames": true,
+		"skipLibCheck": true,
+		"baseUrl": "./src",
+		// Performance optimizations
+		"incremental": true,
+		"tsBuildInfoFile": "./dist/.tsbuildinfo",
+		"assumeChangesOnlyAffectDirectDependencies": true,
+		// Enhanced type checking
+		"exactOptionalPropertyTypes": false,
+		"noImplicitAny": false,
+		"noImplicitThis": true,
+		"alwaysStrict": true,
+		"paths": {
+			"@/*": [
+				"*"
+			],
+			"@components/*": [
+				"components/*"
+			],
+			"@pages/*": [
+				"pages/*"
+			],
+			"@services/*": [
+				"services/*"
+			],
+			"@hooks/*": [
+				"hooks/*"
+			],
+			"@utils/*": [
+				"utils/*"
+			],
+			"@styles/*": [
+				"styles/*"
+			],
+			"@types/*": [
+				"types/*"
+			]
+		}
+	},
+	"include": [
+		"src/**/*"
+	],
+	"exclude": [
+		"node_modules",
+		"dist",
+		"build",
+		"coverage",
+		"webpack.config.js"
+	],
+	// Performance optimizations
+	"ts-node": {
+		"transpileOnly": true,
+		"experimentalSpecifierResolution": "node"
+	}
+}
